@@ -1,7 +1,7 @@
 #!/bin/bash
 #Author:        Kylin
 #Date:          2015/9/1
-#Usage for:     init centos7 system after minal install
+#Usage for:     Configure network
 
 . /etc/rc.d/init.d/functions
 
