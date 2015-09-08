@@ -10,6 +10,13 @@
 
 . /etc/rc.d/init.d/functions
 
+function Install_Other_Tools {
+    echo -e "\e[1;32mInstalling Net-tools, please wait for a while...\e[0m"
+    yum install net-tools -y >> /dev/null
+    echo -e "\e[1;32mInstalling command line web broswer, please wait for a while...\e[0m"
+    yum install links -y >> /dev/null
+}
+
 function Install_APACHE_HTTP {
     echo -e "\e[1;32mInstalling Apache, please wait for a while...\e[0m"
     yum remove httpd -y >> /dev/null
@@ -43,6 +50,22 @@ function Install_APACHE_HTTP {
     else
         action "Http service on: " /bin/false
     fi
+    echo -e "\e[1;32mApache install finish!\e[0m"
 }
 
-Install_APACHE_HTTP
+function Install_PHP {
+    echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
+    yum remove php -y >> /dev/null
+    yum install php -y >> /dev/null
+    
+    systemctl restart httpd.service
+
+    #Check PHP
+    #echo -e "<?php\nphpinfo();\n?>" > /var/www/html/phpinfo.php
+    #links http://127.0.0.1/phpinfo.php
+    echo -e "\e[1;32mPHP install finish!\e[0m"
+}
+
+Install_Other_Tools
+#Install_APACHE_HTTP
+Install_PHP
