@@ -17,19 +17,19 @@ function Install_Other_Tools {
     yum install links -y >> /dev/null
 }
 
-function Install_Complie_Tools{
+function Install_Complie_Tools {
     echo -e "\e[1;32mInstalling GCC, please wait for a while...\e[0m"
     yum install gcc -y >> /dev/null
     echo -e "\e[1;32mInstalling JAVA, please wait for a while...\e[0m"
     yum install java -y >> /dev/null
 }
 
-function Install_Secure_Tools{ 
+function Install_Secure_Tools { 
     echo -e "\e[1;32mInstalling NMAP, please wait for a while...\e[0m"
     yum install nmap -y >> /dev/null
 }
 
-function Install_Manage_Tools{
+function Install_Manage_Tools {
     echo -e "\e[1;32, please wait for a while...\e[0m"
      
 }
@@ -40,4 +40,4 @@ Install_Complie_Tools
 Install_Secure_Tools
 #Install_Manage_Tools
 
-echo -e "\e[41;33mInstall finished!!!\e[0m"
+#echo -e "\e[41;33mInstall finished!!!\e[0m"

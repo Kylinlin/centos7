@@ -13,7 +13,6 @@ TEMPLATE=/etc/kylin_vim.conf
 
 cp $VIM_CONF $VIM_CONF.bak
 sed -i "28a autocmd BufNewFile *.sh 0r $TEMPLATE" $VIM_CONF
-sed -i "7c set ai" $VIM_CONF
 echo "set tabstop=4" >> $VIM_CONF
 echo "set softtabstop=4" >> $VIM_CONF
 echo "set shiftwidth=4" >> $VIM_CONF
