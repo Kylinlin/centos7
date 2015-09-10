@@ -10,6 +10,26 @@
 
 . /etc/rc.d/init.d/functions
 
+function Update_System {
+        echo -n -e "\e[1;31mWarning: you are updating the system! yes or no: \e[0m"
+        read UPDATE_SYSTEM 
+        if [ $UPDATE_SYSTEM == 'yes' ] ; then
+                echo -e "\e[1;36mUpadting and upgrading system, please wait for a while...\e[0m"
+                yum -y update && yum -y upgrade > /dev/null
+                echo -e "\e[1;32mUpadte system done.\e[0m"
+        fi
+
+        #Add extra package for enterprise linux repository and community enterprise linux repository
+        echo -n -e "\e[1;31mWarning: you are adding the third repository for the system! yes or no: \e[0m"
+        read THIRD_REPOSITORY
+        if [ $THIRD_REPOSITORY == 'yes' ] ; then
+                echo -e "\e[1;36mAdding the third repository to the  system, please wait for a while...\e[0m"
+                yum install epel-release -y > /dev/null
+                rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm > /dev/null
+                echo -e "\e[1;32mAdding the third repository to the system done.\e[0m"
+        fi
+}
+
 function Add_User_As_Root {
         echo -n -e "\e[1;31mWarning: you are adding a user as root's privilege! yes or no: \e[0m"
         read CHOICE
