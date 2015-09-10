@@ -1,14 +1,12 @@
 #!/bin/bash
-#Author:        kylin
-#E-mail:        kylinlingh@foxmail.com
-#blog:          http://www.cnblogs.com/kylinlin
-#github:        https://github.com/Kylinlin
-#Date:          2015/9/8
-#version:       1.0
-#Function:      Install useful software
+# Author:        kylin
+# E-mail:        kylinlingh@foxmail.com
+# Blog:          http://www.cnblogs.com/kylinlin
+# Github:        https://github.com/Kylinlin
+# Date:                  2015/9/8          
+# Version:      
+# Function:      Install non-suit tools
 ################################################
-
-. /etc/rc.d/init.d/functions
 
 function Install_Other_Tools {
     echo -e "\e[1;32mInstalling Net-tools, please wait for a while...\e[0m"
@@ -30,14 +28,22 @@ function Install_Secure_Tools {
 }
 
 function Install_Manage_Tools {
-    echo -e "\e[1;32, please wait for a while...\e[0m"
-     
+    echo -n -e "\e[1;34mInstall webmin? yes or no: \e[0m"
+    read WEB_MIN
+    if [ $WEB_MIN == 'yes' ] ; then
+                WEB_MIN_PACKAGE=webmin-1.740-1.noarch.rpm
+        cd ../packages
+                rpm -ivh $WEB_MIN_PACKAGE > /dev/null
+                firewall-cmd --add-port=10000/tcp --permanent > /dev/null
+                firewall-cmd --reload > /dev/null
+                echo -e "\e[1;36mNote: the username and password to login in the website is as same as root's account"
+    fi
 }
 
 
 Install_Other_Tools
 Install_Complie_Tools
 Install_Secure_Tools
-#Install_Manage_Tools
+Install_Manage_Tools
 
-#echo -e "\e[41;33mInstall finished!!!\e[0m"
+echo -e "\e[41;33mInstall finished!!!\e[0m"
