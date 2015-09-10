@@ -69,11 +69,33 @@ function Change_SSH_Port {
 }
 
 function Secure_Set {
-        echo -n -e "\e[1;32m*****Setting secure******\e[0m"
+        FIREWALL_STATUS=`systemctl status firewalld | awk -F ' ' 'NR==3 {print $2}'` 
+        if [ $FIREWALL_STATUS == 'active' ] ; then
+        action "Firewall on: " /bin/true
+    else
+        action "Firewall on: " /bin/false
+    fi
+
+        #Active firewall now?
+        echo -n -e "\e[1;34mActive firewall? yes or no: \e[0m"
+        read FIREWALL_START
+        if [[ $FIREWALL_START == 'yes' && $FIREWALL_STATUS != 'active' ]] ; then
+                systemctl start firewalld
+                echo -e "\e[1;32mFirewall is actived now\e[0m"
+        elif [[ $FIREWALL_START == 'no' && $FIREWALL_STATUS == 'active' ]] ; then 
+                systemctl stop firewalld
+                echo -e "\e[1;31mFirewall is not actived now\e[0m"
+        fi
+
+        #Enable fireall startup with boot?
         echo -n -e "\e[1;34mEnable firewall startup with boot? yes or no: \e[0m"
-        read FIREWALL
-        if [ $FIREWALL == 'yes' ] ; then
-                systemctl enable firewalld
+        read FIREWALL_ENABLE
+        if [ $FIREWALL_ENABLE == 'yes' ] ; then
+                systemctl enable firewalld > /dev/null
+                echo -e "\e[1;32mFirewall will be actived with boot now\e[0m"
+        else
+                systemctl disable firewalld > /dev/null
+                echo -e "\e[1;31mFirewall will not be actived with boot now\e[0m"
         fi
 
         SELINUX_STATUS=`getenforce`
@@ -82,17 +104,18 @@ function Secure_Set {
         else
                 action "Selinux on: " /bin/false
         fi
-        echo -n -e "\e[1;34mEnable Selinux? yes or no: \e[0m"
+        echo -n -e "\e[1;34mActive Selinux? yes or no: \e[0m"
         read SELINUX
 
         SELINUX_CONF=/etc/selinux/config
-        if [ $SELINUX == 'yes' && $SELINUX_STATUS != "Enforcing" ] ; then
+        if [[ $SELINUX == 'yes' && $SELINUX_STATUS != "Enforcing" ]] ; then
                 setenforce 1
                 sed -i '/^SELINUX/c \SELINUX=enforcing' $SELINUX_CONF
-        elif  [ $SELINUX == 'no' && $SELINUX_STATUS == "Enforcing" ] ; then
+                echo -e "\e[1;32mSelinux is actived now and will be actived with boot\e[0m"
+        elif  [[ $SELINUX == 'no' && $SELINUX_STATUS == "Enforcing" ]] ; then
                 setenforce 0
-                sed -i '/^SELINUX/c \SELINUX=enforcing' $SELINUX_CONF
-
+                sed -i '/^SELINUX/c \SELINUX=disabled' $SELINUX_CONF
+                echo -e "\e[1;31mSelinux is not actived now and will not be actived with boot\e[0m"
         fi
 }
 
@@ -151,4 +174,5 @@ $GRUB_PASSWD
 #Call the function
 #Add_User_As_Root 
 #Change_SSH_Port 
-Grub_Lock
+Secure_Set
+#Grub_Lock
