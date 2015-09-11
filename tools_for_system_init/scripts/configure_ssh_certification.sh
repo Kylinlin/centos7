@@ -3,14 +3,14 @@
 # E-mail:        kylinlingh@foxmail.com
 # Blog:          http://www.cnblogs.com/kylinlin
 # Github:        https://github.com/Kylinlin
-# Date:          
-# Version:      
+# Date:          2015/9/9 
+# Version:       1.0
 # Function:      
 ################################################
 
 function SSH_Authorization {
 	USER=`whoami`
-	echo -e "\e[1;31mWarning: you are configuring to login with ssh authorization instead of password! yes or no: \e[0m"
+	echo -n -e "\e[1;31mWarning: you are configuring to login with ssh authorization instead of password! yes or no: \e[0m"
 	read CHOICE
 	if [ $CHOICE == 'no' ] ; then
 		return 0
@@ -30,12 +30,12 @@ function SSH_Authorization {
 	sed -i "/^AuthorizedKeysFile/c \AuthorizedKeysFile      ~/.ssh/authorized_keys" $SSH_CONF
 	sed -i "/^#PasswordAuthentication yes/c \PasswordAuthentication no" $SSH_CONF
 
-	echo -e "\e[1;34mCopy your client's certification to /home/$USER! yes or no: \e[0m"
+	echo -n -e "\e[1;34mCopy your client's certification to /home/$USER! yes or no: \e[0m"
 	read CHOICE
 	if [ $CHOICE == 'no' ] ; then
 		return 0
 	fi
-	while [ ! -f /home/$USER/id_rsa.pub ]; then
+	while [ ! -f /home/$USER/id_rsa.pub ]; do
 		echo -e "\e[1;31mThere is not id_rsa.pub file in /home/$USER !\e[0m"
 	done
 
@@ -44,3 +44,5 @@ function SSH_Authorization {
 	
 	sudo systemctl restart sshd.service		
 }
+
+SSH_Authorization
