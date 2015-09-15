@@ -37,7 +37,7 @@ filetype plugin indent on    " required
 "colorscheme Tomorrow 
 "colorscheme Tomorrow-Night-Blue 
 "colorscheme Tomorrow-Night-Bright 
-"colorscheme Tomorrow-Night 
+colorscheme Tomorrow-Night 
 
 set t_Co=256
 
@@ -47,12 +47,12 @@ set t_Co=256
 
 
 "Solarized"
-colorscheme solarized
-let g:solarized_termcolors=256
+"let g:solarized_termcolors=256
+"colorscheme solarized
 let g:solarized_termtrans=1
 let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
-set background=light
+let g:solarized_visibility="low"
+set background=dark
 
 syntax enable 
 set cul                                                         "高亮光标所在行
@@ -71,8 +71,6 @@ set showcmd                                     " 输入的命令显示出来，
 set scrolloff=3                                 " 光标移动到buffer的顶部和底部时保持3行距离  
 set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}   "状态行显示的内容  
 set laststatus=2                                " 启动显示状态行(1),总是显示状态行(2)  
-set foldenable                                  " 允许折叠  
-set foldmethod=manual                           " 手动折叠  
  
 " 显示中文帮助
 if version >= 603
@@ -109,7 +107,7 @@ set iskeyword+=_,$,@,%,#,-                      " 带有如下符号的单词不
 autocmd BufNewFile *.cpp,*.[ch],*.sh,*.rb,*.java,*.py exec ":call SetTitle()" 
 ""定义函数SetTitle，自动插入文件头 
 
-func AddComment() 
+func! AddComment() 
                 call append(line("."), "###############################################################") 
                 call append(line("."), "#Description    :") 
                 call append(line("."), "#Version        :") 
@@ -119,9 +117,9 @@ func AddComment()
                 call append(line("."), "#Arthor         :   kylin") 
                 call append(line("."), "#File Name      :   ".expand("%")) 
                 call append(line("."), "###############################################################") 
-    endfunc
+endfunc
 
-func SetTitle() 
+func! SetTitle() 
         "如果文件类型为.sh文件 
         if &filetype == 'sh' 
                 call setline(1,"\#!/bin/bash") 
@@ -174,8 +172,8 @@ func SetTitle()
         endif
         "新建文件后，自动定位到文件末尾
 endfunc 
-autocmd BufNewFile * normal G
 
+autocmd BufNewFile * normal G
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 ""实用设置
@@ -190,8 +188,55 @@ set nobackup                                     " 禁止生成临时文件
 set noswapfile
 set ignorecase                                   " 搜索忽略大小写
 set showmatch                                    " 高亮显示匹配的括号
-set matchtime=1                                  " 匹配括号高亮的时间（单位是十分之一秒）
+set matchtime=2                                  " 匹配括号高亮的时间（单位是十分之一秒）
 let mapleader = ','                              " 设置逗号为<leader>键
+let g:mapleader = ','                              " 设置逗号为<leader>键
+set t_ti= t_te=                                 "退出vim时会把内容显示在终端
+set magic                                       "用来使用正则表达式
+set scrolloff=7                             "在上下移动光标时，保持显示7行
+
+"代码折叠
+set foldenable
+" 折叠方法
+" manual    手工折叠
+" indent    使用缩进表示折叠
+" expr      使用表达式定义折叠
+" syntax    使用语法定义折叠
+" diff      对没有更改的文本进行折叠
+" marker    使用标记进行折叠, 默认标记是 {{{ 和 }}}
+set foldmethod=indent
+set foldlevel=99
+" 代码折叠自定义快捷键
+let g:FoldMethod = 0
+map <leader>zz :call ToggleFold()<cr>
+fun! ToggleFold()
+    if g:FoldMethod == 0
+        exe "normal! zM"
+        let g:FoldMethod = 1
+    else
+        exe "normal! zR"
+        let g:FoldMethod = 0
+    endif
+endfun
+
+autocmd! bufwritepost .vimrc source % " vimrc文件修改之后自动加载。 linux。
+
+" 设置标记一列的背景颜色和数字一行颜色一致
+hi! link SignColumn   LineNr
+hi! link ShowMarksHLl DiffAdd
+hi! link ShowMarksHLu DiffChange
+
+" for error highlight，防止错误整行标红导致看不清
+highlight clear SpellBad
+highlight SpellBad term=standout ctermfg=1 term=underline cterm=underline
+highlight clear SpellCap
+highlight SpellCap term=underline cterm=underline
+highlight clear SpellRare
+highlight SpellRare term=underline cterm=underline
+highlight clear SpellLocal
+highlight SpellLocal term=underline cterm=underline
+
+
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -216,15 +261,27 @@ let g:ctrlp_custom_ignore = {
                 \ 'dir':  '\.git$\|\.hg$\|\.svn$',
                 \ 'file': '\.exe$\|\.so$\|\.dll$\|\.pyc$' }
 
-set statusline+=%#warningmsg#               "配置语法检查
+"配置语法检查
+set statusline+=%#warningmsg#               
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
+let g:syntastic_auto_loc_list = 0 
+"let g:syntastic_check_on_open = 0 
+let g:syntastic_check_on_wq = 1 
 let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+"set error or warning signs
+let g:syntastic_error_symbol = 'X'
+let g:syntastic_warning_symbol = 'W'
+"whether to show balloons
+let g:syntastic_enable_balloons = 1 
 
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py '                                "配置YouCompleteMe
+
+"配置YouCompleteMe
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py '          
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_seed_identifiers_with_syntax = 1
+let g:ycm_confirm_extra_conf = 0
 
 
 
