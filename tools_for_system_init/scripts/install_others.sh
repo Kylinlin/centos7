@@ -27,6 +27,9 @@ function Install_Other_Softwares {
 function Install_DEV_Softwares {
     echo -e "\e[1;32mInstalling GCC, please wait for a while...\e[0m"
     yum install gcc -y > /dev/null
+	yum install cmake -y > /dev/null
+	yum install gcc-c++ > /dev/null
+	yum install python-devel > /dev/null
     echo -e "\e[1;32mInstalling JAVA, please wait for a while...\e[0m"
     yum install java -y > /dev/null
 }
