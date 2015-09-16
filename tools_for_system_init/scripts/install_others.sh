@@ -15,11 +15,7 @@ function Install_Necessary_Tools {
 	yum install p7zip -y > /dev/null
 }
 
-function Install_Other_Softwares {
-    
-	echo -e "\e[1;32mInstalling Net-tools, please wait for a while...\e[0m"
-    yum install net-tools -y > /dev/null
-    
+function Install_Other_Softwares { 
 	echo -e "\e[1;32mInstalling command line web broswer, please wait for a while...\e[0m"
     yum install links -y > /dev/null
 }
