@@ -6,7 +6,7 @@
 #Email          :   kylinlingh@foxmail.com
 #Github         :   https://github.com/Kylinlin
 #Version        :   1.0
-#Description    :   Install mysql through network.
+#Description    :   Prepare to initialize system
 ###############################################################
  
  
