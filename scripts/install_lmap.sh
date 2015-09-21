@@ -13,8 +13,8 @@
 
 function Install_APACHE_HTTP {
 	echo -e "\e[1;32mInstalling Apache, please wait for a while...\e[0m"
-	yum remove httpd -y >> /dev/null
-	yum install httpd -y >> /dev/null
+	yum remove httpd -y > /dev/null
+	yum install httpd -y > /dev/null
 
 	echo -n -e "\e[1;34mDo you want to change the 80 port? yes or no: \e[0m"
 	read CON_HTTP_PORT
@@ -29,15 +29,15 @@ function Install_APACHE_HTTP {
 		sed -i "/^Listen/c \Listen $NEW_HTTP_PORT" $HTTP_CONF
 
 		#Configure firewall to enable the new port
-		firewall-cmd --add-service=http >> /dev/null
-		firewall-cmd --permanent --add-port=$NEW_HTTP_PORT/tcp >> /dev/null
-		firewall-cmd --reload >> /dev/null
-		systemctl restart httpd.service >> /dev/null
+		firewall-cmd --add-service=http > /dev/null
+		firewall-cmd --permanent --add-port=$NEW_HTTP_PORT/tcp > /dev/null
+		firewall-cmd --reload > /dev/null
+		systemctl restart httpd.service > /dev/null
 	fi
 
 	#Configure startup httpd with system boot.
-	systemctl restart httpd.service >> /dev/null 
-	systemctl enable httpd.service >> /dev/null
+	systemctl restart httpd.service > /dev/null 
+	systemctl enable httpd.service > /dev/null
 
 	#Check the service
 	if [ `systemctl status httpd | awk -F ' ' 'NR==3 {print $2}'` == 'active' ] ; then
@@ -49,8 +49,8 @@ function Install_APACHE_HTTP {
 
 function Install_PHP {
 	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
-	yum remove php -y >> /dev/null
-	yum install php -y >> /dev/null																																							    
+	yum remove php -y > /dev/null
+	yum install php -y > /dev/null																																							    
 	systemctl restart httpd.service
 
 	#Check PHP
@@ -58,7 +58,14 @@ function Install_PHP {
 	#links http://127.0.0.1/phpinfo.php
 }
 
-Install_Other_Tool 
+function Install_Mysql {
+	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
+	yum install wget -y > /dev/null
+	cd ~
+	wget -qO- https://raw.github.com/Kylinlin/mysql/master/setup.sh | sh -x
+}
+
 Install_APACHE_HTTP
 Install_PHP
-echo -e "\e[1;36mInstall finished!\e[0m"
+Install_Mysql
+echo -e "\e[1;36mInstall LMAP finished!\e[0m"
