@@ -10,7 +10,6 @@
 
 . /etc/rc.d/init.d/functions
 
-
 function Install_APACHE_HTTP {
 	echo -e "\e[1;32mInstalling Apache, please wait for a while...\e[0m"
 	yum remove httpd -y > /dev/null
@@ -51,7 +50,7 @@ function Install_PHP {
 	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
 	yum remove php -y > /dev/null
 	yum install php -y > /dev/null																																							    
-	systemctl restart httpd.service
+	systemctl restart httpd.service > /dev/null
 
 	#Check PHP
 	#echo -e "<?php\nphpinfo();\n?>" > /var/www/html/phpinfo.php
