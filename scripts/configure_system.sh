@@ -24,7 +24,7 @@ function Update_System {
             echo -e "\e[1;32mUpadte system has been done.\e[0m"
 			echo -e "\e[1;32m+Upadte system.\e[0m" >> $CONFIGURED_OPTIONS
         else
-			echo -e "\e[1;32m-Upadte system.\e[0m" >> $UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Upadte system.\e[0m" >> $UNCONFIGURED_OPTIONS
 		fi
 
         #Add extra package for enterprise linux repository and community enterprise linux repository
@@ -37,7 +37,7 @@ function Update_System {
             echo -e "\e[1;32mAdding the third repository to the system has been done.\e[0m"
 			echo -e "\e[1;32m+Add third repository.\e[0m" >> $CONFIGURED_OPTIONS
 		else
-			echo -e "\e[1;32m-Add third repository.\e[0m" >> $UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Add third repository.\e[0m" >> $UNCONFIGURED_OPTIONS
         fi
 }
 
@@ -45,7 +45,7 @@ function Add_User_As_Root {
         echo -n -e "\e[1;35mWarning: you are adding a user as root's privilege! yes or no: \e[0m"
         read CHOICE
         if [ $CHOICE == 'no' ] ; then
-			echo -e "\e[1;32m-Add user as root's privelege\e[0m" >> UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Add user as root's privelege\e[0m" >> $UNCONFIGURED_OPTIONS
                 return 0
         fi
 
@@ -71,15 +71,15 @@ $PASSWD
 " | passwd $USER_NAME > /dev/null
         gpasswd -a $USER_NAME wheel
         echo -e "\e[1;32mUser $USER_NAME has been added sucessfully! Every command must come after \"sudo\" \e[0m"
-		echo -e "\e[1;32m+Add user: $USER_NAME; password:$PASSWD \e[0m" >> CONFIGURED_OPTIONS
+		echo -e "\e[1;32m+Add user: $USER_NAME; password:$PASSWD \e[0m" >> $CONFIGURED_OPTIONS
         echo -e "\e[1;32mNote: Maybe you need to restrict $USER_NAME's privilege, reference my manual. \e[0m"
 }
 
 function Change_SSH_Port {
-        echo -n -e "\e[1;35m\nWarning: you are changing the port of ssh! yes or no: \e[0m"
+        echo -n -e "\e[1;35mWarning: you are changing the port of ssh! yes or no: \e[0m"
         read CHOICE
         if [ $CHOICE == 'no' ] ; then
-			echo -e "\e[1;35m-Change ssh port\e[0m" >> UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Change ssh port\e[0m" >> $UNCONFIGURED_OPTIONS
                 return 0
         fi
 
@@ -114,7 +114,7 @@ function Change_SSH_Port {
         fi
 		
 		echo -e "\e[1;32mChange ssh port has been done.\e[0m"
-		echo -e "\e[1;32m+Change ssh port to: $PORT_NUM\e[0m" >> CONFIGURED_OPTIONS
+		echo -e "\e[1;32m+Change ssh port to: $PORT_NUM\e[0m" >> $CONFIGURED_OPTIONS
         
 }
 
@@ -123,7 +123,7 @@ function SSH_Authorization {
         echo -n -e "\e[1;35mWarning: you are configuring to login with ssh authorization instead of password! yes or no: \e[0m"
         read CHOICE
         if [ $CHOICE == 'no' ] ; then
-			echo -e "\e[1;35m-Configure SSH_Authorization\e[0m" >> UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Configure SSH_Authorization\e[0m" >> $UNCONFIGURED_OPTIONS
             return 0
         fi
 
@@ -173,7 +173,7 @@ function SSH_Authorization {
 
     sudo systemctl restart sshd.service
     echo -e "\e[1;32mSSH_Certification configure finished.\e[0m"
-	echo -e "\e[1;32m+Configure SSH_Authorization\e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Configure SSH_Authorization\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 function Secure_Set {
@@ -236,15 +236,15 @@ function Secure_Set {
     
     #Lock system in 5 minutes after 3 fail login
     sed -i 's#auth        required      pam_env.so#auth        required      pam_env.so\nauth       required       pam_tally.so  onerr=fail deny=3 unlock_time=300\nauth           required     /lib/security/$ISA/pam_tally.so onerr=fail deny=3 unlock_time=300#' /etc/pam.d/system-auth
-    echo -e "\e[1;35m+Lock system in 5 minutes after 3 fail login\e[0m" >> CONFIGURED_OPTIONS
+    echo -e "\e[1;32m+Lock system in 5 minutes after 3 fail login\e[0m" >> $CONFIGURED_OPTIONS
 	
     #logout in 20 minutes after no operations
     echo "TMOUT=1200" >>/etc/profile
-	echo -e "\e[1;35m+logout in 20 minutes after no operations\e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+logout in 20 minutes after no operations\e[0m" >> $CONFIGURED_OPTIONS
     
     #Only record 10 commands in history
     sed -i "s/HISTSIZE=1000/HISTSIZE=10/" /etc/profile
-	echo -e "\e[1;35m+Only record 10 commands in history\e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Only record 10 commands in history\e[0m" >> $CONFIGURED_OPTIONS
     
     #Active the configuration
     source /etc/profile
@@ -252,7 +252,7 @@ function Secure_Set {
     #Active syncookie in /etc/sysctl.conf 
     echo "net.ipv4.tcp_syncookies=1" >> /etc/sysctl.conf
     sysctl -p 
-	echo -e "\e[1;35m+Active syncookie in /etc/sysctl.conf \e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Active syncookie in /etc/sysctl.conf \e[0m" >> $CONFIGURED_OPTIONS
     
     #Optimize sshd_config
     sed -i "s/#MaxAuthTries 6/MaxAuthTries 6/" /etc/ssh/sshd_config
@@ -262,20 +262,16 @@ function Secure_Set {
     chmod 700 /bin/ping
     chmod 700 /usr/bin/who
     chmod 700 /usr/bin/w
-    chmod 700 /usr/bin/locate
     chmod 700 /usr/bin/whereis
-    chmod 700 /sbin/ifconfig
-    chmod 700 /usr/bin/pico
     chmod 700 /bin/vi
     chmod 700 /usr/bin/which
-    chmod 700 /usr/bin/gcc
     chmod 700 /usr/bin/make
     chmod 700 /bin/rpm
     
     #Secure the history file 
     chattr +a /root/.bash_history
     chattr +i /root/.bash_history 
-	echo -e "\e[1;35m+Cannot change file: /root/.bash_history\e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Cannot change file: /root/.bash_history\e[0m" >> $CONFIGURED_OPTIONS
 	
 	echo -e "\e[1;32mSecure setting has been done.\e[0m"
 }
@@ -286,7 +282,7 @@ function Grub_Lock {
         echo -n -e "\e[1;35mWarning: you are adding a lock to grub, yes or no: \e[0m"
         read CHOICE
         if [ $CHOICE == 'no' ] ; then
-			echo -e "\e[1;35m-Add lock to grub\e[0m" >> UNCONFIGURED_OPTIONS
+			echo -e "\e[1;35m-Add lock to grub\e[0m" >> $UNCONFIGURED_OPTIONS
             return 0
         fi
 
@@ -333,7 +329,7 @@ $GRUB_PASSWD
     rm -f tmpfile
 	
 	echo -e "\e[1;32mAdding a lock to grub has been done.\e[0m"
-	echo -e "\e[1;35m+Add lock to grub\e[0m" >> CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Add lock to grub\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 function Echo_Information {
