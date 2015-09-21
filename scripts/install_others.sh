@@ -9,35 +9,33 @@
 ################################################
 
 function Install_Necessary_Tools {
-	yum install wget -y > /dev/null
 	yum install net-tools -y > /dev/null
 	yum install lrzsz -y > /dev/null	
 	yum install p7zip -y > /dev/null
 }
 
 function Install_Other_Softwares { 
-	echo -e "\e[1;32mInstalling command line web broswer, please wait for a while...\e[0m"
+    echo -e "\e[1;32mInstalling command line web broswer, please wait for a while...\e[0m"
     yum install links -y > /dev/null
 }
 
 function Install_DEV_Softwares {
-    echo -e "\e[1;32mInstalling GCC, please wait for a while...\e[0m"
+    echo -e "\e[1;32mInstalling develop tools and libraries, please wait for a while...\e[0m"
     yum install gcc -y > /dev/null
-	yum install cmake -y > /dev/null
-	yum install gcc-c++ > /dev/null
-	yum install python-devel > /dev/null
-    echo -e "\e[1;32mInstalling JAVA, please wait for a while...\e[0m"
+    yum install cmake -y > /dev/null
+    yum install gcc-c++ > /dev/null
+    yum install python-devel > /dev/null
     yum install java -y > /dev/null
 }
 
 function Install_Secure_Softwares { 
     echo -e "\e[1;32mInstalling NMAP, please wait for a while...\e[0m"
-    #yum install nmap -y > /dev/null
+    yum install nmap -y > /dev/null
 
     echo -e "\e[1;32mInstalling Rootkit Hunter, please wait for a while...\e[0m"
-    #yum install rkhunter -y > /dev/null
+    yum install rkhunter -y > /dev/null
 
-    echo -e "\e[1;32mInstalling and downloading Malware Detect(LMD), please wait for a while...\e[0m"
+        echo -e "\e[1;32mInstalling and downloading Malware Detect(LMD), please wait for a while...\e[0m"
 	rm -rf /usr/local/mal*
 	MALDETECT=maldetect-1.4.2
 	cd ../packages/secure
@@ -61,9 +59,9 @@ function Install_Secure_Softwares {
     yum install epel-release -y > /dev/null
     yum install clamav -y > /dev/null
 
-	#Scan Maleware everyday!	
-	cp -f cron.daily /etc/cron.daily/
-	CRON_CONF=/var/spool/cron/root 
+    #Scan Maleware everyday!	
+    cp -f cron.daily /etc/cron.daily/
+    CRON_CONF=/var/spool/cron/root 
 cat>>$CRON_CONF <<EOF
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 MAILTO=root
@@ -77,19 +75,19 @@ function Install_Manage_Softwares {
     echo -n -e "\e[1;34mInstall webmin? yes or no: \e[0m"
     read WEB_MIN
     if [ $WEB_MIN == 'yes' ] ; then
-		WEB_MIN_PACKAGE=webmin-1.740-1.noarch.rpm
+	WEB_MIN_PACKAGE=webmin-1.740-1.noarch.rpm
         cd ../packages/manage
-		rpm -ivh $WEB_MIN_PACKAGE > /dev/null
-		firewall-cmd --add-port=10000/tcp --permanent > /dev/null
-		firewall-cmd --reload > /dev/null
-		echo -e "\e[1;36mNote: the username and password to login in the website is as same as root's account"
+	rpm -ivh $WEB_MIN_PACKAGE > /dev/null
+	firewall-cmd --add-port=10000/tcp --permanent > /dev/null
+	firewall-cmd --reload > /dev/null
+	echo -e "\e[1;36mNote: the username and password to login in the website is as same as root's account"
     fi
 }
 
 
-#Install_Other_Softwares
-#Install_Complie_Softwares
+Install_Other_Softwares
+Install_Complie_Softwares
 Install_Secure_Softwares
-#Install_Manage_Softwares
+Install_Manage_Softwares
 
 echo -e "\e[41;33mInstall finished!!!\e[0m"
