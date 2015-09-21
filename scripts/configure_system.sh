@@ -140,10 +140,10 @@ function SSH_Authorization {
         while [ ! -f /home/$USER_NAME/id_rsa.pub ]; do
             echo -e "\e[1;31mThere is not id_rsa.pub file in /home/$USER_NAME !\e[0m"
             echo -n -e "\e[1;34mCopy your client's certification to /home/$USER_NAME! yes or no: \e[0m"
-        read COPY
-        if [ $COPY == 'no' ] ; then
+			read COPY
+			if [ $COPY == 'no' ] ; then
                 return 0
-        fi
+			fi
         done
 
         SSH_CONF=/etc/ssh/sshd_config
