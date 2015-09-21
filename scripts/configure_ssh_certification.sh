@@ -11,13 +11,11 @@
 function Echo_Information {
     echo "+------------------------SSH_Certification Informations(SSH证书登陆配置信息)---------------------------+
     English Description:
-        
         1.Disable logins as root.
         2.Disable logins using password.
         3.Must set password for your private key.
 
     中文描述：
-        
         1.禁止了以root身份登陆
         2.禁止了使用密码登陆
         3.必须给你的私钥加上密码
