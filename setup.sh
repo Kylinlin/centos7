@@ -14,18 +14,10 @@ function Setup {
     yum install git dos2unix -y > /dev/null
     git clone https://github.com/Kylinlin/centos7.git
     cd centos7/scripts/
-	dos2unix *
+    dos2unix *
 	
-	DIRECTORY=`pwd`
-	echo "export GLOBAL_DIRECTORY=$DIRECTORY" > ~/global_directory.txt
-	
-	#sh configure_network.sh
-	#sh configure_hostname.sh
-	#sh configure_system.sh
-	#sh configure_ssh_certification.sh
-	
-	#sh install_lamp.sh
-	#sh install_other.sh	
+    DIRECTORY=`pwd`
+    echo "export GLOBAL_DIRECTORY=$DIRECTORY" > ~/global_directory.txt
 }
  
 Setup
