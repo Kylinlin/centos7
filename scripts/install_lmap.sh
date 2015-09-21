@@ -10,11 +10,14 @@
 
 . /etc/rc.d/init.d/functions
 
+CONFIGURED_OPTIONS=../log/configured_options.log
+UNCONFIGURED_OPTIONS=../log/unconfigured_options.log
+
 function Install_APACHE_HTTP {
-	echo -e "\e[1;32mInstalling Apache, please wait for a while...\e[0m"
+	echo -e "\e[1;33mInstalling Apache, please wait for a while...\e[0m"
 	yum remove httpd -y > /dev/null
 	yum install httpd -y > /dev/null
-
+	
 	echo -n -e "\e[1;34mDo you want to change the 80 port? yes or no: \e[0m"
 	read CON_HTTP_PORT
 	if [ $CON_HTTP_PORT == 'yes' ]; then 
@@ -32,6 +35,8 @@ function Install_APACHE_HTTP {
 		firewall-cmd --permanent --add-port=$NEW_HTTP_PORT/tcp > /dev/null
 		firewall-cmd --reload > /dev/null
 		systemctl restart httpd.service > /dev/null
+		
+		echo -e "\e[1;32m+Installed apache and changed port to: $NEW_HTTP_PORT\e[0m" >> $CONFIGURED_OPTIONS
 	fi
 
 	#Configure startup httpd with system boot.
@@ -44,27 +49,32 @@ function Install_APACHE_HTTP {
 	else
 		action "Http service on: " /bin/false
 	fi
+	echo -e "\e[1;32m+Installed apache \e[0m" >> $CONFIGURED_OPTIONS
 }
 
 function Install_PHP {
-	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
+	echo -e "\e[1;33mInstalling PHP, please wait for a while...\e[0m"
 	yum remove php -y > /dev/null
 	yum install php -y > /dev/null																																							    
 	systemctl restart httpd.service > /dev/null
+	echo -e "\e[1;32m+Installed php \e[0m" >> $CONFIGURED_OPTIONS
 
 	#Check PHP
 	#echo -e "<?php\nphpinfo();\n?>" > /var/www/html/phpinfo.php
 	#links http://127.0.0.1/phpinfo.php
 }
 
-function Install_Mysql {
+function Install_MYSQL {
 	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
 	yum install wget -y > /dev/null
-	cd ~
+	cd ../packages
+	DIRECORY=`pwd`
 	wget -qO- https://raw.github.com/Kylinlin/mysql/master/setup.sh | sh -x
+	cp $DIRECORY/mysql/log/install_mysql.log $DIRECORY/../log/
+	echo -e "\e[1;32m+Installed mysql \e[0m" >> $CONFIGURED_OPTIONS
 }
 
 Install_APACHE_HTTP
 Install_PHP
-Install_Mysql
+Install_MYSQL
 echo -e "\e[1;36mInstall LMAP finished!\e[0m"
