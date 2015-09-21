@@ -20,7 +20,8 @@ function Update_System {
         read UPDATE_SYSTEM 
         if [ $UPDATE_SYSTEM == 'yes' ] ; then
             echo -e "\e[1;33mUpadting and upgrading system, please wait for a while...\e[0m"
-            yum -y update && yum -y upgrade > /dev/null
+            yum -y update > /dev/null
+			yum -y upgrade > /dev/null
             echo -e "\e[1;32mUpadte system has been done.\e[0m"
 			echo -e "\e[1;32m+Upadte system.\e[0m" >> $CONFIGURED_OPTIONS
         else
@@ -52,7 +53,7 @@ function Add_User_As_Root {
         while true; do
             echo -n -e "\e[1;34mEnter the username: \e[0m" 
             read USER_NAME
-            echo -n -e "\e[1;34mEnter the passwd: "
+            echo -n -e "\e[1;34mEnter the passwd: \e[0m"
             read PASSWD
 
             echo -e "\e[1;36m*******Check the Input*******\e[0m"
@@ -66,7 +67,7 @@ function Add_User_As_Root {
         done
 
         useradd $USER_NAME
-echo"$PASSWD
+echo "$PASSWD
 $PASSWD
 " | passwd $USER_NAME > /dev/null
         gpasswd -a $USER_NAME wheel
@@ -91,12 +92,12 @@ function Change_SSH_Port {
         cp $SSH_CONF $SSH_CONF.bak
         echo -n -e "\e[1;34mEnter the port number for SSH(between 1025 to 65536): \e[0m"
         read PORT_NUM
-        echo  "Please wait for a while..."
+        echo -e "\e[1;33mPlease wait for a while...\e[0m"
         sed -i "/^#Port /c \Port $PORT_NUM" $SSH_CONF
         sed -i "/^Port /c \Port $PORT_NUM" $SSH_CONF
         sed -i "/^#Protocol 2/c \Protocol 2" $SSH_CONF
-        sed -i "/^#PermitRootLogin yes/c \PermitRootLogin no" $SSH_CONF
-        sed -i "/^PermitRootLogin yes/c \PermitRootLogin no" $SSH_CONF
+        #sed -i "/^#PermitRootLogin yes/c \PermitRootLogin no" $SSH_CONF
+        #sed -i "/^PermitRootLogin yes/c \PermitRootLogin no" $SSH_CONF
 
         #Tell the selinux that ssh port has been changed
         yum install policycoreutils-python-2.2.5-15.el7.x86_64 -y > /dev/null
@@ -104,9 +105,12 @@ function Change_SSH_Port {
 
         #Add the port to firewall
         firewall-cmd --zone=public --add-port=$PORT_NUM/tcp --permanent > /dev/null
+		firewall-cmd --reload > /dev/null
+		firewall-cmd --reload > /dev/null
 
         #Check service
         systemctl reload sshd.service
+		systemctl restart sshd.service
         if [ `systemctl status sshd.service | awk -F ' ' 'NR==3 {print $2}'` == 'active' ] ; then
                 action "SSH service on: " /bin/true
         else
@@ -128,7 +132,7 @@ function SSH_Authorization {
         fi
 
     while true; do
-        echo -n -e "\e[1;34mEnter the username you want to configure: "
+        echo -n -e "\e[1;34mEnter the username you want to configure: \e[0m"
         read USER_NAME
         id $USER_NAME > /dev/null
         if [[ $? == 1 ]] ; then
