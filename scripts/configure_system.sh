@@ -10,9 +10,10 @@
 ###############################################################
 
 . /etc/rc.d/init.d/functions
+source ~/global_directory.txt
 
-CONFIGURED_OPTIONS=../log/configured_options.log
-UNCONFIGURED_OPTIONS=../log/unconfigured_options.log
+CONFIGURED_OPTIONS=$GLOBAL_DIRECTORY/../log/configured_options.log
+UNCONFIGURED_OPTIONS=$GLOBAL_DIRECTORY/../log/unconfigured_options.log
 
 function Update_System {
         echo -n -e "\e[1;35mWarning: you are updating the system! yes or no: \e[0m"

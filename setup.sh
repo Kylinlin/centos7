@@ -16,13 +16,16 @@ function Setup {
     cd centos7/scripts/
 	dos2unix *
 	
-	sh configure_network.sh
-	sh configure_hostname.sh
-	sh configure_system.sh
-	sh configure_ssh_certification.sh
+	DIRECTORY=`pwd`
+	echo "export GLOBAL_DIRECTORY=$DIRECTORY" > ~/global_directory.txt
 	
-	sh install_lamp.sh
-	sh install_other.sh	
+	#sh configure_network.sh
+	#sh configure_hostname.sh
+	sh configure_system.sh
+	#sh configure_ssh_certification.sh
+	
+	#sh install_lamp.sh
+	#sh install_other.sh	
 }
  
 Setup
