@@ -14,11 +14,13 @@ function Echo_Information {
         1.Disable logins as root.
         2.Disable logins using password.
         3.Must set password for your private key.
+        4.Login as the username you configure.
 
     中文描述：
         1.禁止了以root身份登陆
         2.禁止了使用密码登陆
         3.必须给你的私钥加上密码
+        4.必须以你配置的用户名登陆
 +------------------------------------------------------------------------------------------------------+" >> ../logs/install.log 
 }
 
