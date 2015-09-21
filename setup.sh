@@ -13,13 +13,16 @@
 function Setup {
     yum install git dos2unix -y > /dev/null
     git clone https://github.com/Kylinlin/centos7.git
-    cd ~/centos7/scripts/
+    cd centos7/scripts/
 	dos2unix *
-    sh install_mysql.sh
-    if [[ ! -d /server ]]; then
-        mkdir /server
-    fi  
-    cp backup_mysql.sh /server/
+	
+	sh configure_network.sh
+	sh configure_hostname.sh
+	sh configure_system.sh
+	sh configure_ssh_certification.sh
+	
+	sh install_lamp.sh
+	sh install_other.sh	
 }
  
 Setup
