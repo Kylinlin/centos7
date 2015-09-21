@@ -21,7 +21,7 @@ function Setup {
 	
 	#sh configure_network.sh
 	#sh configure_hostname.sh
-	sh configure_system.sh
+	#sh configure_system.sh
 	#sh configure_ssh_certification.sh
 	
 	#sh install_lamp.sh
