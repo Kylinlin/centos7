@@ -21,7 +21,7 @@
 
 ###安装的软件套件
 + rkhunter（rootkit猎手）检测是否感染rootkit和后门程序
-  +用法：rkhunter --check ，会生成报告文件：/var/log/rkhunter/rkhunter.log
-  +每天自动检测一次
+  + 用法：rkhunter --check ，会生成报告文件：/var/log/rkhunter/rkhunter.log
+  + 每天自动检测一次
 + 恶意软件检测工具LMD和杀毒引擎ClamAV
-++每天自动扫描apache目录
+  + 每天自动扫描apache目录
