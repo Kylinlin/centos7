@@ -267,16 +267,6 @@ function Secure_Set {
     sed -i "s/#MaxAuthTries 6/MaxAuthTries 6/" /etc/ssh/sshd_config
     sed -i  "s/#UseDNS yes/UseDNS no/" /etc/ssh/sshd_config
     
-    #Restrict the privileges of importmant commands
-    chmod 700 /bin/ping
-    chmod 700 /usr/bin/who
-    chmod 700 /usr/bin/w
-    chmod 700 /usr/bin/whereis
-    chmod 700 /bin/vi
-    chmod 700 /usr/bin/which
-    chmod 700 /usr/bin/make
-    chmod 700 /bin/rpm
-    
     #Secure the history file 
     chattr +a /root/.bash_history
     chattr +i /root/.bash_history 
