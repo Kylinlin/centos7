@@ -176,8 +176,11 @@ function SSH_Authorization {
     chown -R $USER_NAME:$USER_NAME  /home/$USER_NAME/.ssh/authorized_keys
 
     sudo systemctl restart sshd.service
+	
+	echo -e "\e[1;35mEnter the password for your certification: \e[0m"
+	read PASSWORD_SSH
     echo -e "\e[1;32mSSH_Certification configure finished.\e[0m"
-	echo -e "\e[1;32m+Configure SSH_Authorization\e[0m" >> $CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Configure SSH_Authorization, username:$USER_NAME, password:$PASSWORD_SSH\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 function Secure_Set {
@@ -231,13 +234,14 @@ function Secure_Set {
         sed -i '/^SELINUX/c \SELINUX=disabled' $SELINUX_CONF
         echo -e "\e[1;31mSelinux is not actived now and will not be actived with boot\e[0m"
     fi
+	
+	#Cannot add user.
     #chattr +i /etc/passwd
     #chattr +i /etc/shadow
     #chattr +i /etc/group
     #chattr +i /etc/gshadow
     
     #Lock system for 3 minutes after 5 fail login
-    #sed -i 's#auth        required      pam_env.so#auth        required      pam_env.so\nauth       required       pam_tally.so  onerr=fail deny=3 unlock_time=300\nauth           required     /lib/security/$ISA/pam_tally.so onerr=fail deny=3 unlock_time=300#' /etc/pam.d/system-auth
 	cp /etc/pam.d/login  /etc/pam.d/login.bak
 	sed -i '2i auth required pam_tally2.so deny=5 unlock_time=180 even_deny_root root_unlock_time=180' /etc/pam.d/login
     echo -e "\e[1;32m+Lock system for 3 minutes after 5 fail login\e[0m" >> $CONFIGURED_OPTIONS
@@ -333,7 +337,7 @@ $GRUB_PASSWD
     rm -f tmpfile
 	
 	echo -e "\e[1;32mAdding a lock to grub has been done.\e[0m"
-	echo -e "\e[1;32m+Add lock to grub\e[0m" >> $CONFIGURED_OPTIONS
+	echo -e "\e[1;32m+Add lock to grub. username: $GRUB_USERNAME,password:$GRUB_PASSWD \e[0m" >> $CONFIGURED_OPTIONS
 }
 
 function Echo_Information {
