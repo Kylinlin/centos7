@@ -18,3 +18,10 @@
 
 ###注意
 + 因为会禁止用root账户登录，所以必须添加具有root权限的用户，否则无法登陆
+
+###安装的软件套件
++ rkhunter（rootkit猎手）检测是否感染rootkit和后门程序
+  + 用法：rkhunter --check ，会生成报告文件：/var/log/rkhunter/rkhunter.log
+  + 每天凌晨两点自动检测一次
++ 恶意软件检测工具LMD和杀毒引擎ClamAV
+  + 每天凌晨两点自动扫描apache目录
