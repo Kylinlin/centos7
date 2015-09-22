@@ -231,16 +231,16 @@ function Secure_Set {
         sed -i '/^SELINUX/c \SELINUX=disabled' $SELINUX_CONF
         echo -e "\e[1;31mSelinux is not actived now and will not be actived with boot\e[0m"
     fi
-
-    #Cannot add user
     #chattr +i /etc/passwd
     #chattr +i /etc/shadow
     #chattr +i /etc/group
     #chattr +i /etc/gshadow
     
-    #Lock system in 5 minutes after 3 fail login
-    sed -i 's#auth        required      pam_env.so#auth        required      pam_env.so\nauth       required       pam_tally.so  onerr=fail deny=3 unlock_time=300\nauth           required     /lib/security/$ISA/pam_tally.so onerr=fail deny=3 unlock_time=300#' /etc/pam.d/system-auth
-    echo -e "\e[1;32m+Lock system in 5 minutes after 3 fail login\e[0m" >> $CONFIGURED_OPTIONS
+    #Lock system for 3 minutes after 5 fail login
+    #sed -i 's#auth        required      pam_env.so#auth        required      pam_env.so\nauth       required       pam_tally.so  onerr=fail deny=3 unlock_time=300\nauth           required     /lib/security/$ISA/pam_tally.so onerr=fail deny=3 unlock_time=300#' /etc/pam.d/system-auth
+	cp /etc/pam.d/login  /etc/pam.d/login.bak
+	sed -i '2i auth required pam_tally2.so deny=5 unlock_time=180 even_deny_root root_unlock_time=180' /etc/pam.d/login
+    echo -e "\e[1;32m+Lock system for 3 minutes after 5 fail login\e[0m" >> $CONFIGURED_OPTIONS
 	
     #logout in 20 minutes after no operations
     echo "TMOUT=1200" >>/etc/profile
