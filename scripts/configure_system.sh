@@ -4,6 +4,7 @@
 #Arthor         :   kylin
 #Created Time   :   Wed Sep 16 17:47:09 CST 2015 
 #Email          :   kylinlingh@foxmail.com
+#Blog           :   http://www.cnblogs.com/kylinlin/
 #Github         :   https://github.com/Kylinlin
 #Version        :
 #Description    :

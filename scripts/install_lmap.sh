@@ -1,4 +1,5 @@
 #!/bin/bash
+###############################################################
 # Author:        kylin
 # E-mail:        kylinlingh@foxmail.com
 # Blog:          http://www.cnblogs.com/kylinlin
@@ -6,12 +7,14 @@
 # Date:          2015/9/8 
 # Version:       1.0
 # Function:      Install LMAP
-################################################
+###############################################################
 
 . /etc/rc.d/init.d/functions
 
-CONFIGURED_OPTIONS=../log/configured_options.log
-UNCONFIGURED_OPTIONS=../log/unconfigured_options.log
+source ~/global_directory.txt
+
+CONFIGURED_OPTIONS=$GLOBAL_DIRECTORY/../log/configured_options.log
+UNCONFIGURED_OPTIONS=$GLOBAL_DIRECTORY/../log/unconfigured_options.log
 
 function Install_APACHE_HTTP {
 	echo -e "\e[1;33mInstalling Apache, please wait for a while...\e[0m"
@@ -37,6 +40,8 @@ function Install_APACHE_HTTP {
 		systemctl restart httpd.service > /dev/null
 		
 		echo -e "\e[1;32m+Installed apache and changed port to: $NEW_HTTP_PORT\e[0m" >> $CONFIGURED_OPTIONS
+	else
+		echo -e "\e[1;32m+Installed apache \e[0m" >> $CONFIGURED_OPTIONS
 	fi
 
 	#Configure startup httpd with system boot.
@@ -48,8 +53,7 @@ function Install_APACHE_HTTP {
 		action "Http service on: " /bin/true
 	else
 		action "Http service on: " /bin/false
-	fi
-	echo -e "\e[1;32m+Installed apache \e[0m" >> $CONFIGURED_OPTIONS
+	fi	
 }
 
 function Install_PHP {
@@ -65,16 +69,15 @@ function Install_PHP {
 }
 
 function Install_MYSQL {
-	echo -e "\e[1;32mInstalling PHP, please wait for a while...\e[0m"
-	yum install wget -y > /dev/null
-	cd ../packages
-	DIRECORY=`pwd`
-	wget -qO- https://raw.github.com/Kylinlin/mysql/master/setup.sh | sh -x
-	cp $DIRECORY/mysql/log/install_mysql.log $DIRECORY/../log/
+	echo -e "\e[1;33mInstalling MYSQL5.6, please wait for a while...\e[0m"
+
+	cd $GLOBAL_DIRECTORY/../packages
+	wget -qO- https://raw.github.com/Kylinlin/mysql/master/setup.sh | sh 
+	cp $GLOBAL_DIRECTORY/../packages/mysql/log/install_mysql.log $GLOBAL_DIRECTORY/../log/
 	echo -e "\e[1;32m+Installed mysql \e[0m" >> $CONFIGURED_OPTIONS
 }
 
 Install_APACHE_HTTP
 Install_PHP
 Install_MYSQL
-echo -e "\e[1;36mInstall LMAP finished!\e[0m"
+echo -e "\e[1;32mInstall LMAP finished!\e[0m"
