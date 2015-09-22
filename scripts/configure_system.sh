@@ -340,23 +340,6 @@ $GRUB_PASSWD
 	echo -e "\e[1;32m+Add lock to grub. username: $GRUB_USERNAME,password:$GRUB_PASSWD \e[0m" >> $CONFIGURED_OPTIONS
 }
 
-function Echo_Information {
-    echo "+------------------------SSH_Certification Informations(SSH证书登陆配置信息)---------------------------+
-    English Description:
-        1.Disable logins as root.
-        2.Disable logins using password.
-        3.Must set password for your private key.
-        4.Login as the username you configure.
-
-    中文描述：
-        1.禁止了以root身份登陆
-        2.禁止了使用密码登陆
-        3.必须给你的私钥加上密码
-        4.必须以你配置的用户名登陆
-+------------------------------------------------------------------------------------------------------+" >> ../log/configure.log 
-}
-
-
 #Call the function
 Update_System
 Add_User_As_Root 
@@ -364,4 +347,4 @@ Change_SSH_Port
 SSH_Authorization
 Secure_Set
 Grub_Lock
-#Echo_Information
+
