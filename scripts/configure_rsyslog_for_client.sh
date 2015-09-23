@@ -44,6 +44,7 @@ EOF
     source /etc/bashrc
 
     systemctl restart rsyslog > /dev/null
+	systemctl enable rsyslog.service > /dev/null
 	echo -e "\e[1;32m+Configure remote log system \e[0m"
 }
 
