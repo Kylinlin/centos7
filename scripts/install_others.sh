@@ -103,7 +103,7 @@ function Install_Manage_Softwares {
 }
 
 
-#Install_Other_Softwares
+Install_Other_Softwares
 Install_Necessary_Tools
 Install_DEV_Softwares
 Install_Secure_Softwares
