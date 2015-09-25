@@ -1,5 +1,7 @@
 ###安装说明
-+ 1.直接在终端运行命令就可以安装： wget -qO- https://raw.github.com/Kylinlin/centos7/master/setup.sh | sh -x 
++ 1.直接在终端运行命令克隆这个项目： wget -qO- https://raw.github.com/Kylinlin/centos7/master/setup.sh | sh -x 
++ 2.运行文件scripts/startup.sh来进行安装
++ 3.在安装的过程中需要有人值守，来确认每一步的安装
 
 ###配置内容
 + 更新系统和软件
