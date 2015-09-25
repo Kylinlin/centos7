@@ -1,12 +1,13 @@
 #!/bin/bash
 ###############################################################
-# Author:        kylin
-# E-mail:        kylinlingh@foxmail.com
-# Blog:          http://www.cnblogs.com/kylinlin
-# Github:        https://github.com/Kylinlin
-# Date:			 2015/9/8          
-# Version:      
-# Function:      Install non-suit tools
+#File Name      :   startup.sh
+#Arthor         :   kylin
+#Created Time   :   Wed 08 Sep 2015 11:03:52 AM CST
+#Email          :   kylinlingh@foxmail.com
+#Blog           :   http://www.cnblogs.com/kylinlin/
+#Github         :   https://github.com/Kylinlin
+#Version        :	1.0
+#Description    :	To install non-suits 's software.
 ###############################################################
 
 source ~/global_directory.txt
@@ -21,10 +22,28 @@ function Install_Necessary_Tools {
 	yum install p7zip -y > /dev/null
 }
 
-#function Install_Other_Softwares { 
+function Install_Other_Softwares { 
     #echo -e "\e[1;32mInstalling command line web broswer, please wait for a while...\e[0m"
     #yum install links -y > /dev/null
-#}
+    echo -e "\e[1;35mInstall nagios, yes or no: \e[0m"
+    read CHOICE
+    if [[ $CHOICE == 'yes' ]]; then
+        echo -e "\e[1;35mEnter 1 for nagios_server, 2 for nagios_client: \e[0m"
+        read NAGIOS
+        if [[ $NAGIOS == 1 ]]; then
+            cd $GLOBAL_DIRECTORY/../packages
+            wget -qO- https://raw.github.com/Kylinlin/nagios/master/setup_for_server.sh | sh -x
+            echo -e "\e[1;32m+Installed nagios_for_server \e[0m" >> $CONFIGURED_OPTIONS
+        elif [[ $NAGIOS == 2 ]]; then
+            cd $GLOBAL_DIRECTORY/../packages
+            wget -qO- https://raw.github.com/Kylinlin/nagios/master/setup_for_client.sh | sh -x
+            echo -e "\e[1;32m+Installed nagios_for_client \e[0m" >> $CONFIGURED_OPTIONS
+        else
+            echo "\e[1;36mWrong input. It will not install nagios. \e[0m"
+        fi
+    fi
+    
+}
 
 function Install_DEV_Softwares {
     echo -e "\e[1;33mInstalling develop tools and libraries, please wait for a while...\e[0m"

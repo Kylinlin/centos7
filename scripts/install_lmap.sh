@@ -1,12 +1,13 @@
 #!/bin/bash
 ###############################################################
-# Author:        kylin
-# E-mail:        kylinlingh@foxmail.com
-# Blog:          http://www.cnblogs.com/kylinlin
-# Github:        https://github.com/Kylinlin
-# Date:          2015/9/8 
-# Version:       1.0
-# Function:      Install LMAP
+#File Name      :   startup.sh
+#Arthor         :   kylin
+#Created Time   :   Wed 08 Sep 2015 11:03:52 AM CST
+#Email          :   kylinlingh@foxmail.com
+#Blog           :   http://www.cnblogs.com/kylinlin/
+#Github         :   https://github.com/Kylinlin
+#Version        :	1.0
+#Description    :	To install lmap.
 ###############################################################
 
 . /etc/rc.d/init.d/functions
