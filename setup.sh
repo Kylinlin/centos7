@@ -11,7 +11,7 @@
  
  
 function Setup {
-    yum install git dos2unix -y > /dev/null
+    yum install git dos2unix lrzsz -y > /dev/null
     git clone https://github.com/Kylinlin/centos7.git
     cd centos7/scripts/
     dos2unix *

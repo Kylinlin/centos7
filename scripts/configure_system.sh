@@ -178,7 +178,7 @@ function SSH_Authorization {
 
     sudo systemctl restart sshd.service
 	
-	echo -e "\e[1;35mEnter the password for your certification: \e[0m"
+	echo -e -n "\e[1;35mEnter the password for your certification: \e[0m"
 	read PASSWORD_SSH
     echo -e "\e[1;32mSSH_Certification configure finished.\e[0m"
 	echo -e "\e[1;32m+Configure SSH_Authorization, username:$USER_NAME, password:$PASSWORD_SSH\e[0m" >> $CONFIGURED_OPTIONS

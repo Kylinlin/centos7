@@ -19,7 +19,6 @@ UNCONFIGURED_OPTIONS=$GLOBAL_DIRECTORY/../log/unconfigured_options.log
 
 function Install_APACHE_HTTP {
 	echo -e "\e[1;33mInstalling Apache, please wait for a while...\e[0m"
-	yum remove httpd -y > /dev/null
 	yum install httpd -y > /dev/null
 	
 	echo -n -e "\e[1;34mDo you want to change the 80 port? yes or no: \e[0m"
@@ -59,7 +58,6 @@ function Install_APACHE_HTTP {
 
 function Install_PHP {
 	echo -e "\e[1;33mInstalling PHP, please wait for a while...\e[0m"
-	yum remove php -y > /dev/null
 	yum install php -y > /dev/null																																							    
 	systemctl restart httpd.service > /dev/null
 	echo -e "\e[1;32m+Installed php \e[0m" >> $CONFIGURED_OPTIONS
