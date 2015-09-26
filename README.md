@@ -20,8 +20,11 @@
 
 ###注意
 + 因为会禁止用root账户登录，所以必须添加具有root权限的用户，否则无法登陆
++ 在配置了ssh证书登陆后会马上生效，在确认生效前不要登出系统，如果配置失败，请使用备份好的/etc/rsyslog.conf.bak文件
 
 ###安装的软件套件
++ 安装LMAP套件：mysql， apache， php
++ 安装nagios监控软件
 + rkhunter（rootkit猎手）检测是否感染rootkit和后门程序
   + 用法：rkhunter --check ，会生成报告文件：/var/log/rkhunter/rkhunter.log
   + 每天凌晨两点自动检测一次
