@@ -15,6 +15,7 @@ function Configure_Hostname {
         read HOST_NAME
         echo "$HOST_NAME" > $HOSTNAME
         sed -i "1{s/$/ $HOST_NAME/}" $HOSTS
+        sed -i '1s#localhost#localhost $HOST_NAME.localdomain#' $HOSTS
 
 }
 
