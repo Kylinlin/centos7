@@ -89,7 +89,14 @@ function Install_Secure_Softwares {
 
     echo -e "\e[1;33mInstalling and downloading Antivirus Engine(ClamAV size:90M), please wait for a while...\e[0m"
     yum install epel-release -y > /dev/null
-    yum install clamav -y > /dev/null
+    yum install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd -y > /dev/null
+    sed -i -e “s/^Example/#Example/” /etc/freshclam.conf
+    sed -i -e “s/^Example/#Example/” /etc/clamd.d/scan.conf
+    freshclam
+    sed -i '25d' /etc/sysconfig/freshclam 
+    sed -i "/^#LocalSocket /var/run/clamd.scan/clamd.sock/c \LocalSocket /var/run/clamd.scan/clamd.sock" /etc/clam.d/scan.conf
+    systemctl enable clamd@scan
+    ln -s '/usr/lib/systemd/system/clamd@scan.service' '/etc/systemd/system/multi-user.target.wants/clamd@scan.service'
 
     #Scan Maleware everyday!	
     cp -f cron.daily /etc/cron.daily/
