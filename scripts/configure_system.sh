@@ -29,6 +29,9 @@ function Update_System {
 			echo -e "\e[1;35m-Upadte system.\e[0m" >> $UNCONFIGURED_OPTIONS
 		fi
 
+        #Update system everyday
+        echo "00 1 * * * root /usr/bin/yum update -y" >> /etc/crontab 
+
         #Add extra package for enterprise linux repository and community enterprise linux repository
         echo -n -e "\e[1;35mWarning: you are adding the third repository for the system! yes or no: \e[0m"
         read THIRD_REPOSITORY
@@ -271,6 +274,28 @@ function Secure_Set {
     chattr +a /root/.bash_history
     chattr +i /root/.bash_history 
 	echo -e "\e[1;32m+Cannot change file: /root/.bash_history\e[0m" >> $CONFIGURED_OPTIONS
+
+    #Protect /var/log/secure & /var/log/audit/audit.log
+    cat > /etc/logrotate.d/admin <<EOF
+/var/log/audit/audit
+/var/log/secure
+{
+    size=1000M  <==檔案容量大於 10M 則開始處置
+    rotate 5  <==保留五個！
+    compress  <==進行壓縮工作！
+    sharedscripts
+    prerotate
+            /usr/bin/chattr -a /var/log/secure.log
+    endscript
+    sharedscripts
+    postrotate
+            /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+            /usr/bin/chattr +a /var/log/secure.log
+    endscript
+}
+EOF
+
+    sed -i "s#/var/log/secure##"  /etc/logrotate.d/syslog 
 	
 	echo -e "\e[1;32mSecure setting has been done.\e[0m"
 }
