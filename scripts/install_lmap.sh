@@ -44,6 +44,9 @@ function Install_APACHE_HTTP {
 		echo -e "\e[1;32m+Installed apache \e[0m" >> $CONFIGURED_OPTIONS
 	fi
 
+	#Rotate the log of apache.
+	sed -i '3a compress' /etc/logrotate.d/httpd
+
 	#Configure startup httpd with system boot.
 	systemctl restart httpd.service > /dev/null 
 	systemctl enable httpd.service > /dev/null

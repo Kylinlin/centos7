@@ -114,25 +114,12 @@ EOF
 	echo -e "\e[1;32m+Installed LMD and ClamAV\e[0m" >> $CONFIGURED_OPTIONS
 }
 
-function Install_Manage_Softwares {
-    echo -n -e "\e[1;35mInstall webmin? yes or no: \e[0m"
-    read WEB_MIN
-    if [ $WEB_MIN == 'yes' ] ; then
-		WEB_MIN_PACKAGE=webmin-1.740-1.noarch.rpm
-		cd $GLOBAL_DIRECTORY/../packages/manage
-		rpm -ivh $WEB_MIN_PACKAGE > /dev/null
-		firewall-cmd --add-port=10000/tcp --permanent > /dev/null
-		firewall-cmd --reload > /dev/null
-		#echo -e "\e[1;36mNote: the username and password to login in the website is as same as root's account"
-    fi
-	echo -e "\e[1;32m+Installed webmin  --> username:root; password: as same as root's \e[0m" >> $CONFIGURED_OPTIONS
-}
 
 
 Install_Other_Softwares
 Install_Necessary_Tools
 Install_DEV_Softwares
 Install_Secure_Softwares
-Install_Manage_Softwares
+
 
 echo -e "\e[1;32mInstall finished!!!\e[0m"
