@@ -195,7 +195,7 @@ EOF
 
     /etc/init.d/portsentry start
 
-    echo -e "\e[1;32m+Installed portsentry\e[0m" >> $CONFIGURED_OPTIONS
+    echo -e "\e[1;32m+Installed portsentry. And the allowed ip is: $REMOTE_IP\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 
