@@ -87,31 +87,42 @@ function Install_Secure_Softwares {
 	sed -i '/^quar_susp=0/c \quar_susp=1' $MALDETECT_COND
 	sed -i '/^clamav_scan=0/c \clamav_scan=1' $MALDETECT_COND
 
+    #Install Clamav
     echo -e "\e[1;33mInstalling and downloading Antivirus Engine(ClamAV size:90M), please wait for a while...\e[0m"
     yum install epel-release -y > /dev/null
-    yum install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd -y > /dev/null
+#   yum install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd -y > /dev/null
+    yum install yum install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd -y > /dev/null
     sed -i -e “s/^Example/#Example/” /etc/freshclam.conf
     sed -i -e “s/^Example/#Example/” /etc/clamd.d/scan.conf
     freshclam
-    sed -i '25d' /etc/sysconfig/freshclam 
+    sed -i '24d' /etc/sysconfig/freshclam 
+    sed -i '6c* 02 * * * root /usr/share/clamav/freshclam-sleep' /etc/cron.d/clamav-update 
+    echo "MAILTO=root" > /etc/cron.d/clamav-scan-daily
+    echo "* 03 * * * root clamscan -r --bell -i / " >> /etc/cron.d/clamav-scan-daily
     sed -i "/^#LocalSocket /var/run/clamd.scan/clamd.sock/c \LocalSocket /var/run/clamd.scan/clamd.sock" /etc/clam.d/scan.conf
     systemctl enable clamd@scan
-    ln -s '/usr/lib/systemd/system/clamd@scan.service' '/etc/systemd/system/multi-user.target.wants/clamd@scan.service'
-
-    #Scan Maleware everyday!	
-    cp -f cron.daily /etc/cron.daily/
-	echo "00 02 *  *  * root run-part /etc/cron.daily"
-	systemctl restart crond
-    CRON_CONF=/var/spool/cron/root 
-	
-cat>>$CRON_CONF <<EOF
-PATH=/sbin:/bin:/usr/sbin:/usr/bin
-MAILTO=root
-HOME=/
-SHELL=/bin/bash
-EOF
+    systemctl  start clamd@scan
 
 	echo -e "\e[1;32m+Installed LMD and ClamAV\e[0m" >> $CONFIGURED_OPTIONS
+
+    #Install nethogs to monitor the network
+    yum install libpcap libpcap-devel > /dev/null
+    cd $GLOBAL_DIRECTORY/../packages
+    NETHOGS=nethogs-0.8.0
+    tar -xf $NETHOGS.tar.gz
+    cd nethogs
+    make && make install > /dev/null
+    echo -e "\e[1;32m+Installed Nethogs to monitor network\e[0m" >> $CONFIGURED_OPTIONS
+
+    #Install nload to monitor the network
+    yum install nload -y > /dev/null
+    echo -e "\e[1;32m+Installed Nload to monitor network\e[0m" >> $CONFIGURED_OPTIONS
+
+    #Install setroubleshoot
+    yum install setroubleshoot setools -y > /dev/null
+    echo "MAILTO=root" > /etc/cron.d/setroubleshoot
+    echo "* 03 * * * root sealert -a /var/log/audit/audit.log " >> /etc/cron.d/setroubleshoot
+    echo -e "\e[1;32m+Installed setroubleshoot\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 
