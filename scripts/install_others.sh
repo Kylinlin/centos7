@@ -109,7 +109,7 @@ function Install_Secure_Softwares {
     yum install libpcap libpcap-devel > /dev/null
     cd $GLOBAL_DIRECTORY/../packages
     NETHOGS=nethogs-0.8.0
-    tar -xf $NETHOGS.tar.gz
+    tar -xf $NETHOGS.tar.gz 
     cd nethogs
     make && make install > /dev/null
     echo -e "\e[1;32m+Installed Nethogs to monitor network\e[0m" >> $CONFIGURED_OPTIONS
@@ -123,6 +123,79 @@ function Install_Secure_Softwares {
     echo "MAILTO=root" > /etc/cron.d/setroubleshoot
     echo "* 03 * * * root sealert -a /var/log/audit/audit.log " >> /etc/cron.d/setroubleshoot
     echo -e "\e[1;32m+Installed setroubleshoot\e[0m" >> $CONFIGURED_OPTIONS
+
+    #Install portsentry
+    cd $GLOBAL_DIRECTORY/../packages
+    PORTSENTRY=portsentry-1.2
+    tar -xf $PORTSENTRY.tar.gz 
+    cd portsentry_beta
+
+    cp portsentry.c portsentry.c.bak
+    sed -i '1584,1585d' portsentry.c 
+    sed -i '1583a printf ("Copyright 1997-2003 Craig H. Rowland <craigrowland at users dot sourceforget dot net>\\n");' portsentry.c
+
+    make linux > /dev/null
+    make install > /dev/null
+
+echo > /etc/init.d/portsentry <<EOF
+#!/bin/bash
+
+case "$1" in
+start)
+echo "Starting Portsentry..."
+ps ax | grep -iw '/usr/local/psionic/portsentry/portsentry -atcp' | grep -iv 'grep' > /dev/null
+if [ $? != 0 ]; then
+/usr/local/psionic/portsentry/portsentry -atcp
+fi
+ps ax | grep -iw '/usr/local/psionic/portsentry/portsentry -audp' | grep -iv 'grep' > /dev/null
+if [ $? != 0 ]; then
+/usr/local/psionic/portsentry/portsentry -audp
+fi
+echo "Portsentry is now up and running!"
+;;
+stop)
+echo "Shutting down Portsentry..."
+array=(`ps ax | grep -iw '/usr/local/psionic/portsentry/portsentry' | grep -iv 'grep' \
+| awk '{print $1}' | cut -f1 -d/ | tr '\n' ' '`)
+element_count=${#array[@]}
+index=0
+while [ "$index" -lt "$element_count" ]
+do
+kill -9 ${array[$index]}
+let "index = $index + 1"
+done
+echo "Portsentry stopped!"
+;;
+restart)
+$0 stop && sleep 3
+$0 start
+;;
+*)
+echo "Usage: $0 {start|stop|restart}"
+exit 1
+esac
+exit 0
+EOF
+    chmod +x /etc/init.d/portsentry
+
+    chmod 755 /etc/init.d/portsentry
+    ln -s /etc/init.d/portsentry /etc/rc2.d/S20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc3.d/S20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc4.d/S20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc5.d/S20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc0.d/K20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc1.d/K20portsentry
+    ln -s /etc/init.d/portsentry /etc/rc6.d/K20portsentry
+
+    echo -e "\e[1;35mEnter the remote ip address you want to allow to scan the ports for this machine: \e[0m" >> $CONFIGURED_OPTIONS
+    read REMOTE_IP
+    if [[ $REMOTE_IP != '' ]]; then
+        echo $REMOTE_IP >> /usr/local/psionic/portsentry/portsentry.ignore
+    fi
+
+    /etc/init.d/portsentry start
+
+    echo -e "\e[1;32m+Installed portsentry\e[0m" >> $CONFIGURED_OPTIONS
 }
 
 
